@@ -1,23 +1,59 @@
 var correct = 0;
 var incorrect = 0;
-var timer = 30;
+var timer = 10;
 var intervalId;
-var num = 0;        //The trivia question number
+var isRunning = false;
+var num = 0;        //Sort through the trivia questions
 var trivia = [{
-    question: "Question 1?",
-    choices: ["First Answer 1", "Second Answer 1", "Third Answer 1", "Fourth Answer 1"],
-    answer: 0
+    question: "What is the smallest state of the U.S.?",
+    choices: ["Delaware", "Rhode Island", "Iowa", "Wisconsin"],
+    answer: 1,
+    image: "../images/rhode-island.jpg"
 }, {
-    question: "Question 2?",
-    choices: ["First Answer 1", "Second Answer 1", "Third Answer 1", "Fourth Answer 1"],
+    question: "What is the longest river in the United States?",
+    choices: ["Colorado", "Rio Grande", "Yukon", "Missouri"],
+    answer: 3,
+    image: "../images/missouri.jpg"
+}, {
+    question: "Name the largest American state by area.",
+    choices: ["Alaska", "California", "Texas", "Montana"],
+    answer: 0,
+    image: "../images/alaska.jpg"
+}, {
+    question: "In which state is Mount Rushmore located?",
+    choices: ["North Dakota", "North Carolina", "South Dakota", "South Carolina"],
+    answer: 2,
+    image: "../images/south-dakota.jpg"
+}, {
+    question: "Name the largest lake in the U.S.",
+    choices: ["Lake Superior", "Lake Michigan", "Lake Tahoe", "Lake Huron"],
+    answer: 0,
+    image: "../images/lake-superior.jpg"
+}, {
+    question: "Which state shares the border with Canada?",
+    choices: ["Alaska", "Minnesota", "Washington", "Montana"],
     answer: 3
 }, {
-    question: "Question 3?",
-    choices: ["First Answer 1", "Second Answer 1", "Third Answer 1", "Fourth Answer 1"],
+    question: "Name the capital of Florida.",
+    choices: ["Honolulu", "Tallahassee", "Little Rock", "Helena"],
+    answer: 1
+}, {
+    question: "In which state is Atlantic City located?",
+    choices: ["New Jersey", "New York", "New Hampshire", "Massachusetts"],
+    answer: 0
+}, {
+    question: "How many states share a border with Mexico?",
+    choices: ["2", "3", "4", "5"],
     answer: 2
+}, {
+    question: "Which state only touches one state?",
+    choices: ["Alaska", "Connecticut", "Florida", "Maine"],
+    answer: 3
 }];
 
 $(document).ready(function () {
+
+    // $("#start-over").hide();
 
     $("#start").on("click", run);
 
@@ -28,30 +64,45 @@ $(document).ready(function () {
         var userInput = $(this).attr("data");     //Grab the user's answer
 
         if (trivia[num].answer == userInput) {
-            $("#answers").html("<h2>Correct!</h2>");
+            $("#question").html("<h2>Correct!</h2>")
+            $("#answers").html("");
             correct++;
-            num++;
-            setTimeout(run, 3000);
+            next();
         } else {
-            $("#answers").html("<h2>Incorrect!</h2>");
+            $("#question").html("<h2>Incorrect!</h2>");
+            $("#answers").html("The correct answer was " + trivia[num].choices[num]);
+            // document.getElementById("image").src = "../images/rhode-island.jpg";
             incorrect++;
-            num++;
-            setTimeout(run, 3000);
+            next();
         }
 
     });
+
+    if (timer < 0) {
+        stop();
+        setTimeout($("#timer").html("<h2>Time Up!</h2>"), 2000);
+        $("#question").html(" ");
+        $("#answers").html("The correct answer was " + trivia[num].choices[num]+ "<br>" + "<img src='" + trivia[num].image + "'>");
+        incorrect++;
+        next();
+    }
 
 });
 
 function run() {
     $(this).hide();     //Hide the start button
-    intervalID = setInterval(decrement, 1000);
+    if (!isRunning) {
+        intervalID = setInterval(decrement, 1000);
+    }
+    isRunning = true;
     display();
 }
 
 function stop() {
     clearInterval(intervalId);
-    timer = 30;
+    isRunning = false;
+    timer = 10;     //clearInterval is not working?
+    $("#timer").html("<h2>Time Remaining: " + timer + "</h2>");
 }
 
 function decrement() {
@@ -61,16 +112,17 @@ function decrement() {
 
     if (timer === 0) {
         stop();
-        $("#time-out").html("<h2>Time Up!</h2>")
+        $("#timer").html("<h2>Time Up!</h2>")
     }
 
 }
 
-function display() { 
+function display() {
 
     if (num < trivia.length) {      //Display questions until we've reached the end of all trivia questions
 
         $("#question").html(trivia[num].question);
+        $("#answers").html(" ");
 
         var choicesArr = trivia[num].choices;
 
@@ -83,10 +135,25 @@ function display() {
         }
     } else {
 
-        $("#correct").html("Correct: " + correct);
-        $("#incorrect").html("Incorrect: " + incorrect);
+        $("#question").html("Your results are below!");
+        $("#answers").html("Correct: " + correct + "<br>" + "Incorrect: " + incorrect);
+        $("#start-over").display;
+        reset();
 
     }
 
+}
+
+function next() {
+    num++;
+    setTimeout(display, 3000);      //replace run function with display function because the clearInterval isn't working
+}
+
+function reset() {
+    stop();
+    correct = 0;
+    incorrect = 0;
+    num = 0;
+    $("#start-over").on("click", display);
 }
 
