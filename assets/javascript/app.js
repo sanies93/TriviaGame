@@ -1,8 +1,7 @@
 var correct = 0;
 var incorrect = 0;
-var timer = 10;
+var timer = 5;
 var intervalId;
-var isRunning = false;
 var num = 0;        //Sort through the trivia questions
 var trivia = [{
     question: "What is the smallest state of the U.S.?",
@@ -51,6 +50,13 @@ var trivia = [{
     image: "assets/images/maine.jpg"
 }];
 
+var ans;
+var image = $("<img>");
+    image.attr("src", trivia[num].image);
+    image.attr("width", "300");
+    image.attr("height", "300");
+
+
 $(document).ready(function () {
 
     $("#start").on("click", run);
@@ -60,12 +66,7 @@ $(document).ready(function () {
         stop();
 
         var userInput = $(this).attr("data");     //Grab the user's answer
-        var ans = trivia[num].answer;
-
-        var image = $("<img>");
-        image.attr("src", trivia[num].image);
-        image.attr("width", "300");
-        image.attr("height", "300");
+        ans = trivia[num].answer;
 
         if (trivia[num].answer == userInput) {
             $("#question").html("<h2>Correct!</h2>")
@@ -83,32 +84,16 @@ $(document).ready(function () {
 
     });
 
-    if (timer < 0) {
-        stop();
-        setTimeout($("#timer").html("<h2>Time Up!</h2>"), 2000);
-        $("#question").html(" ");
-        $("#answers").html("The correct answer was " + trivia[ans].choices[ans]);
-        $("#answers").append(image);
-        incorrect++;
-        next();
-    }
-
 });
 
 function run() {
     $(this).hide();     //Hide the start button
-    if (!isRunning) {
-        intervalID = setInterval(decrement, 1000);
-    }
-    isRunning = true;
+    intervalId = setInterval(decrement, 1000);
     display();
 }
 
 function stop() {
     clearInterval(intervalId);
-    isRunning = false;
-    timer = 10;     //clearInterval is not working?
-    $("#timer").html("<h2>Time Remaining: " + timer + "</h2>");
 }
 
 function decrement() {
@@ -116,9 +101,16 @@ function decrement() {
     $("#timer").html("<h2>Time Remaining: " + timer + "</h2>");
     timer--;
 
-    if (timer === 0) {
+    ans = trivia[num].answer;
+
+    if (timer < 0) {
         stop();
-        $("#timer").html("<h2>Time Up!</h2>")
+        $("#timer").html("<h2>Time Up!</h2>");
+        $("#question").html(" ");
+        $("#answers").html("The correct answer was " + trivia[num].choices[ans] + "</br>");
+        $("#answers").append(image);
+        incorrect++;
+        next();
     }
 
 }
@@ -132,7 +124,7 @@ function display() {
 
         var choicesArr = trivia[num].choices;
 
-        for (var i = 0; i < trivia[num].choices.length; i++) {      //Create buttons for each choice in each question
+        for (var i = 0; i < choicesArr.length; i++) {      //Create buttons for each choice in each question
             var button = $("<button>");
             button.text(choicesArr[i]);
             button.addClass("answerChoice");
@@ -141,6 +133,7 @@ function display() {
         }
     } else {
 
+        stop();
         $("#question").html("Your results are below!");
         $("#answers").html("Correct: " + correct + "<br>" + "Incorrect: " + incorrect + "<br>");
         var replay = $("<button>");
@@ -154,17 +147,20 @@ function display() {
 }
 
 function next() {
+    image.attr("src", trivia[num].image);
     num++;
-    timer = 10;
-    setTimeout(display, 3000);      //replace run function with display function because the clearInterval isn't working
+    if (num < trivia.length) {
+        ans = trivia[num].answer;
+    }
+    timer = 5;
+    setTimeout(run, 3000);
 }
 
 function reset() {
-    stop();
     correct = 0;
     incorrect = 0;
     num = 0;
-    timer = 10;
-    display();
+    timer = 5;
+    run();
 }
 

@@ -7,14 +7,20 @@ body {
     color: darkblue;
 }
 
-.card {
+html, body{
+    width: 100%;
+    height: 100%;
     display: flex;
-    align-items: center;
-    align-content: center;
     justify-content: center;
-    min-height: 650px;
-    border: darkblue 2px solid;
+    align-items: center;
 }
+
+.card {
+    min-height: 550px;
+    border: darkblue 2px solid;
+    opacity: 0.75;
+}
+
 
 h1 {
     font-family: 'Alfa Slab One', cursive;
@@ -32,7 +38,19 @@ button {
     font-size: 16px;
   }
 
-  .answerChoice:hover {
+  .answerChoice {
+    display: block;
+    width: 100%;
+    border: none;
     background-color: white;
     color: darkblue;
+    padding: 14px 28px;
+    font-size: 32px;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .answerChoice:hover {
+    background-color: darkblue;
+    color: white;
   }
