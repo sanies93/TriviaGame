@@ -1,0 +1,38 @@
+body {
+    background-image: url("../images/background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-size: 24px;
+    font-family: 'Merriweather', serif;
+    color: darkblue;
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    min-height: 650px;
+    border: darkblue 2px solid;
+}
+
+h1 {
+    font-family: 'Alfa Slab One', cursive;
+    color: darkgoldenrod;
+}
+
+button {
+    background-color: darkblue;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
+
+  .answerChoice:hover {
+    background-color: white;
+    color: darkblue;
+  }
